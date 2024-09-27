@@ -176,7 +176,8 @@ if sheet_url:
     month = st.selectbox("Select Month", worksheet_names)
 
 day = st.selectbox("Select Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-date = st.selectbox("Select Date", [f"{i}{'th' if 4 <= i <= 20 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd'}" for i in range(1, 32)])
+date = st.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
+
 
 
 if st.button("Get Rota"):
