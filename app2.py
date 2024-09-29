@@ -86,12 +86,16 @@ def filter_and_format_data(df, day, date):
             "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("SPA/Emergency cover").idxmax()],          
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SPA/Emergency cover").idxmax() + 12],     
         },
-        "Long Day (17:00 - 21:30)": {
-    "SpR": ' '.join(day_date_row.iloc[0, df.iloc[1].str.contains(pattern, regex=True)].tolist())
+
+pattern = "Long Day PM|Long day PM|Ward Eve|SCBU Eve"
+
+your_dict = {
+    "Long Day (17:00 - 21:30)": {
+        "SpR": ' '.join(day_date_row.iloc[0, df.iloc[1].str.contains(pattern, regex=True)].tolist()),
+        "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SHO Eve x2").idxmax()]
+    }
 },
-pattern = "Long Day PM|Long day PM|Ward Eve|SCBU Eve"          
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SHO Eve x2").idxmax()],     
-        },
+
         "Overnight Consultant": {
             "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Off site On call 1700-0830").idxmax()]
         },
