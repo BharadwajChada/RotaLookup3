@@ -172,7 +172,7 @@ def concatenate_long_day_or_ward_scbu(day_date_row, df):
     if ward_eve_idx.any() and scbu_eve_idx.any():
         ward_eve = day_date_row.iloc[0, ward_eve_idx.idxmax()]
         scbu_eve = day_date_row.iloc[0, scbu_eve_idx.idxmax()]
-        result = f"{ward_eve} AND {scbu_eve}"
+        result = f"{ward_eve} and {scbu_eve}"
     # Otherwise, return "Long Day PM" or "Long day PM" if present
     elif long_day_pm_idx.any():
         result = day_date_row.iloc[0, long_day_pm_idx.idxmax()]
