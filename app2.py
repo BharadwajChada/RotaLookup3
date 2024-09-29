@@ -88,7 +88,7 @@ def filter_and_format_data(df, day, date):
         },
         "Long Day (17:00 - 21:30)": {
     "SpR": ' '.join(day_date_row.iloc[0, df.iloc[1].str.contains(pattern, regex=True)].tolist())
-}
+},
 pattern = "Long Day PM|Long day PM|Ward Eve|SCBU Eve"          
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SHO Eve x2").idxmax()],     
         },
