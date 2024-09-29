@@ -68,7 +68,7 @@ def filter_and_format_data(df, day, date):
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Twilight").idxmax()]
         },
         "Registrar (from 5pm) in ED": {
-            "Registrar": day_date_row.iloc[0, df.iloc[1].str.contains("Comm Evening").idxmax()]
+            "Registrar": day_date_row.iloc[0, df.iloc[1].str.contains("Comm Evening|PAT Eve", regex=True)").idxmax()]
         },
         "Starlight Team": {
             "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Ward").idxmax()],  
@@ -87,8 +87,8 @@ def filter_and_format_data(df, day, date):
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SPA/Emergency cover").idxmax() + 12],     
         },
         "Long Day (17:00 - 21:30)": {
-            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("Long Day PM|Long day PM", regex=True).idxmax()],          
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Long Day PM|Long day PM", regex=True).idxmax() + 8],     
+            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("Long Day PM|Long day PM|Ward Eve", regex=True).idxmax()],          
+            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SHO Eve x2).idxmax()],     
         },
         "Overnight Consultant": {
             "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Off site On call 1700-0830").idxmax()]
