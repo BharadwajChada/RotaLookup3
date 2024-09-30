@@ -83,9 +83,9 @@ def filter_and_format_data(df, day, date):
             "Registrar": day_date_row.iloc[0, df.iloc[1].str.contains("Comm Evening|PAT Eve", regex=True).idxmax()]
         },
         "Starlight Team": {
-            "Consultant": day_date_row.iloc[0, ward_registrar_index] if ward_registrar_index else "Not assigned",
-            "SpR": day_date_row.iloc[0, ward_sho_index] if ward_sho_index else "Not assigned",  
-            "SHO": day_date_row.iloc[0, ward_sho_index + 11] if ward_sho_index else "Not assigned",     
+            "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Ward").idxmax()],
+            "SpR: day_date_row.iloc[0, ward_registrar_index] if ward_registrar_index else "Not assigned", 
+            "SHO":   day_date_row.iloc[0, ward_sho_index] if ward_sho_index else "Not assigned"
         },
         "Sunshine Day Unit": {
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Sunshine").idxmax()]
