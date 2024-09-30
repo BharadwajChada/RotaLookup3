@@ -61,6 +61,17 @@ def filter_and_format_data(df, day, date):
         ward_registrar_index = ward_indexes[0] if len(ward_indexes) > 0 else None
         ward_sho_index = None
 
+    # Find the first and second occurrences of "PAT" separately
+    pat_occurrences = df.iloc[1].str.contains(r"^PAT$", regex=True)
+    pat_indexes = pat_occurrences[pat_occurrences].index  # Get all indexes of "PAT"
+
+    if len(ward_indexes) >= 2:
+        pat_registrar_index = pat_indexes[0]  # First occurrence for Registrar
+        pat_sho_index = pat_indexes[1]  # Second occurrence for SHO
+    else:
+        pat_registrar_index = pat_indexes[0] if len(pat_indexes) > 0 else None
+        pat_sho_index = None
+
     # Extract staff information for all teams
     staff_info = {
         "SCBU Team": {
@@ -72,8 +83,8 @@ def filter_and_format_data(df, day, date):
         },
         "PAT Team": {
             "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Acute").idxmax()],  
-            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("PAT").idxmax()],          
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("PAT").idxmax() + 11],     
+            "SpR": day_date_row.iloc[0, pat_registrar_index] if pat_registrar_index else "Not assigned", 
+            "SHO":   day_date_row.iloc[0, pat_sho_index] if pat_sho_index else "Not assigned",     
             "Consultant (Mon - Fri 17:00-21:30/Sat - Sun: 13:30 - 21:30)": day_date_row.iloc[0, df.iloc[2].str.contains("mon - fri 1700-2130 sat -sun 13:30 -21:30").idxmax()]  
         },
         "Twilight Team": {
