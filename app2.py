@@ -45,7 +45,8 @@ def filter_and_format_data(df, day, date):
     # Find the row for the specified day and date
     day_date_row = df[(df[0] == day) & (df[1] == date)]
     
-   if day_date_row.empty:
+    if day_date_row.empty:
+
         print("Date not found in the sheet.")
         return
 
