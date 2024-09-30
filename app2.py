@@ -45,9 +45,20 @@ def filter_and_format_data(df, day, date):
     # Find the row for the specified day and date
     day_date_row = df[(df[0] == day) & (df[1] == date)]
     
-    if day_date_row.empty:
+   if day_date_row.empty:
         print("Date not found in the sheet.")
         return
+
+    # Find the first and second occurrences of "Ward" separately
+    ward_occurrences = df.iloc[1].str.contains("Ward", regex=True)
+    ward_indexes = ward_occurrences[ward_occurrences].index  # Get all indexes of "Ward"
+
+    if len(ward_indexes) >= 2:
+        ward_registrar_index = ward_indexes[0]  # First occurrence for Registrar
+        ward_sho_index = ward_indexes[1]  # Second occurrence for SHO
+    else:
+        ward_registrar_index = ward_indexes[0] if len(ward_indexes) > 0 else None
+        ward_sho_index = None
 
     # Extract staff information for all teams
     staff_info = {
@@ -71,9 +82,9 @@ def filter_and_format_data(df, day, date):
             "Registrar": day_date_row.iloc[0, df.iloc[1].str.contains("Comm Evening|PAT Eve", regex=True).idxmax()]
         },
         "Starlight Team": {
-            "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Ward").idxmax()],  
-            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("Ward").idxmax()],          
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Ward").idxmax() + 11],     
+            "Consultant": day_date_row.iloc[0, ward_registrar_index] if ward_registrar_index else "Not assigned",
+            "SpR": day_date_row.iloc[0, ward_sho_index] if ward_sho_index else "Not assigned",  
+            "SHO": day_date_row.iloc[0, ward_sho_index + 11] if ward_sho_index else "Not assigned",     
         },
         "Sunshine Day Unit": {
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Sunshine").idxmax()]
