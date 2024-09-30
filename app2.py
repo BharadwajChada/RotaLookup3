@@ -62,7 +62,7 @@ def filter_and_format_data(df, day, date):
         ward_sho_index = None
 
     # Find the first and second occurrences of "PAT" separately
-    pat_occurrences = df.iloc[1].str.contains(r"^PAT$", regex=True)
+    pat_occurrences = df.iloc[1].str.contains(r"^PAT\s*$", regex=True)
     pat_indexes = pat_occurrences[pat_occurrences].index  # Get all indexes of "PAT"
 
     if len(pat_indexes) >= 2:
@@ -73,7 +73,7 @@ def filter_and_format_data(df, day, date):
         pat_sho_index = None
 
     # Find the first and second occurrences of "SCBU" separately
-    scbu_occurrences = df.iloc[1].str.contains(r"^SCBU$", regex=True)
+    scbu_occurrences = df.iloc[1].str.contains(r"^SCBU\s*$", regex=True)
     scbu_indexes = scbu_occurrences[scbu_occurrences].index  # Get all indexes of "SCBU"
 
     if len(scbu_indexes) >= 2:
