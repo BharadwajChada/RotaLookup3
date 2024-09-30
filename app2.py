@@ -259,22 +259,8 @@ if st.button("Get Rota"):
     formatted_data = filter_and_format_data(df, day, date)
     
     st.subheader(f"Staff Rota for {day} {date}")
-  
-   # Create two columns
-    col1, col2 = st.columns(2)
+    # Use st.text() or st.markdown() to display the formatted data
 
-    # Split formatted_data into two parts
-    staff_info_lines = formatted_data.split("\n")
-    mid_index = len(staff_info_lines) // 2
+    
+    st.markdown(formatted_data.replace('\n', '<br>'), unsafe_allow_html=True)
 
-    # Column 1: SCBU Team to Registrar in ED
-    with col1:
-        for line in staff_info_lines[:mid_index]:
-            if line.strip():  # Check if line is not empty
-                st.markdown(line)
-
-    # Column 2: Starlight Team to Night Team
-    with col2:
-        for line in staff_info_lines[mid_index:]:
-            if line.strip():  # Check if line is not empty
-                st.markdown(line)
