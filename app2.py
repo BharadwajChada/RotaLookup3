@@ -248,17 +248,19 @@ if sheet_url:
     worksheet_names = get_worksheet_names(sheet)
     month = st.selectbox("Select Month", worksheet_names)
 
-# Create a combined list of day and date options
-days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-dates = [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)]
-combined_day_date = [f"{day} {date}" for day in days for date in dates]
+day = st.selectbox("Select Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+date = st.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
 
-selected_day_date = st.selectbox("Select Day and Date", combined_day_date)
+
 
 if st.button("Get Rota"):
     sheet = connect_to_google_sheet(sheet_url)
     df = get_monthly_data(sheet, month)
-    formatted_data = filter_and_format_data(df, selected_day_date)
+    formatted_data = filter_and_format_data(df, day, date)
     
-    st.subheader(f"Staff Rota for {selected_day_date}")
+    st.subheader(f"Staff Rota for {day} {date}")
+    # Use st.text() or st.markdown() to display the formatted data
+
+    
     st.markdown(formatted_data.replace('\n', '<br>'), unsafe_allow_html=True)
+
