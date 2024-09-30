@@ -65,19 +65,53 @@ def filter_and_format_data(df, day, date):
     pat_occurrences = df.iloc[1].str.contains(r"^PAT$", regex=True)
     pat_indexes = pat_occurrences[pat_occurrences].index  # Get all indexes of "PAT"
 
-    if len(ward_indexes) >= 2:
+    if len(pat_indexes) >= 2:
         pat_registrar_index = pat_indexes[0]  # First occurrence for Registrar
         pat_sho_index = pat_indexes[1]  # Second occurrence for SHO
     else:
         pat_registrar_index = pat_indexes[0] if len(pat_indexes) > 0 else None
         pat_sho_index = None
 
+    # Find the first and second occurrences of "SCBU" separately
+    scbu_occurrences = df.iloc[1].str.contains(r"^SCBU$", regex=True)
+    scbu_indexes = scbu_occurrences[scbu_occurrences].index  # Get all indexes of "SCBU"
+
+    if len(scbu_indexes) >= 2:
+        scbu_registrar_index = scbu_indexes[0]  # First occurrence for Registrar
+        scbu_sho_index = scbu_indexes[1]  # Second occurrence for SHO
+    else:
+        scbu_registrar_index = scbu_indexes[0] if len(scbu_indexes) > 0 else None
+        scbu_sho_index = None
+
+    # Find the first and second occurrences of "Clinic" separately
+    clinic_occurrences = df.iloc[1].str.contains(r"^Clinic$", regex=True)
+    clinic_indexes = clinic_occurrences[clinic_occurrences].index  # Get all indexes of "Clinic"
+
+    if len(clinic_indexes) >= 2:
+        clinic_registrar_index = clinic_indexes[0]  # First occurrence for Registrar
+        clinic_sho_index = clinic_indexes[1]  # Second occurrence for SHO
+    else:
+        clinic_registrar_index = clinic_indexes[0] if len(clinic_indexes) > 0 else None
+        clinic_sho_index = None
+
+    # Find the first and second occurrences of "SPA/Emergency cover" separately
+    spa_occurrences = df.iloc[1].str.contains(r"^SPA/Emergency cover$", regex=True)
+    spa_indexes = spa_occurrences[spa_occurrences].index  # Get all indexes of "SPA/Emergency Cover"
+
+    if len(spa_indexes) >= 2:
+        spa_registrar_index = spa_indexes[0]  # First occurrence for Registrar
+        spa_sho_index = spa_indexes[1]  # Second occurrence for SHO
+    else:
+        spa_registrar_index = spa_indexes[0] if len(spa_indexes) > 0 else None
+        spa_sho_index = None
+
+
     # Extract staff information for all teams
     staff_info = {
         "SCBU Team": {
             "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Neo").idxmax()],  
-            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("SCBU").idxmax()],      
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SCBU").idxmax() + 9], 
+            "SpR": day_date_row.iloc[0, scbu_registrar_index] if scbu_registrar_index else "Not assigned", 
+            "SHO":   day_date_row.iloc[0, scbu_sho_index] if scbu_sho_index else "Not assigned", 
             "PN": day_date_row.iloc[0, df.iloc[1].str.contains("Post Nat").idxmax()],   
             "LW": day_date_row.iloc[0, df.iloc[1].str.contains("Labour Ward").idxmax()], 
         },
@@ -102,12 +136,12 @@ def filter_and_format_data(df, day, date):
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Sunshine").idxmax()]
         },
         "Clinic": {
-            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("Clinic").idxmax()],          
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Clinic").idxmax() + 12],     
+            "SpR": day_date_row.iloc[0, clinic_registrar_index] if clinic_registrar_index else "Not assigned", 
+            "SHO":   day_date_row.iloc[0, clinic_sho_index] if clinic_sho_index else "Not assigned"
         },
         "SPA": {
-            "SpR": day_date_row.iloc[0, df.iloc[1].str.contains("SPA/Emergency cover").idxmax()],          
-            "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("SPA/Emergency cover").idxmax() + 12],     
+            "SpR": day_date_row.iloc[0, spa_registrar_index] if spa_registrar_index else "Not assigned", 
+            "SHO":   day_date_row.iloc[0, spa_sho_index] if spa_sho_index else "Not assigned"    
         },
         "Long Day (17:00 - 21:30)": {
             # Handle the concatenation of "Ward Eve" and "SCBU Eve" or fallback to "Long Day PM"
