@@ -227,7 +227,7 @@ def filter_and_format_data(df, day, date):
     
     # New checks for "Starlight Ward/HDU" and "2nd ED & Neo Bleep"
     starlight_idx = df.iloc[1].str.contains("Starlight Ward/HDU", regex=True)
-    neo_bleep_idx = df.iloc[1].str.contains("2nd ED & Neo Bleep", regex=True)
+    neo_bleep_idx = df.iloc[1].str.contains("2nd ED & Neo Blp", regex=True)
 
     # Check if both "Ward Eve" and "SCBU Eve" exist, concatenate them if they do
     if ward_eve_idx.any() and scbu_eve_idx.any():
