@@ -267,14 +267,43 @@ if st.button("📅 Get Rota"):
         sheet = connect_to_google_sheet(sheet_url)
         df = get_monthly_data(sheet, month)
         formatted_data = filter_and_format_data(df, day, date)
+        
+# Split the formatted data into two sections
+    formatted_data_left = (
+        "### SCBU Team\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["SCBU Team"].items()]) + "\n"
+        + "\n### PAT Team\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["PAT Team"].items()]) + "\n"
+        + "\n### Twilight Team (13:30 - 21:30)\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Twilight Team"].items()]) + "\n"
+        + "\n### Registrar (17:00 - 21:30) in ED\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Registrar (from 5pm) in ED"].items()])
+    )
 
-    sheet = connect_to_google_sheet(sheet_url)
-    df = get_monthly_data(sheet, month)
-    formatted_data = filter_and_format_data(df, day, date)
-    
-    st.subheader(f"Staff Rota for {day} {date}")
-    # Use st.text() or st.markdown() to display the formatted data
+    formatted_data_right = (
+        "### Starlight Team\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Starlight Team"].items()]) + "\n"
+        + "\n### Sunshine Day Unit\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Sunshine Day Unit"].items()]) + "\n"
+        + "\n### Clinic\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Clinic"].items()]) + "\n"
+        + "\n### SPA\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["SPA"].items()]) + "\n"
+        + "\n### Long Day (17:00 - 21:30)\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Long Day (17:00 - 21:30)"].items()]) + "\n"
+        + "\n### Overnight Consultant\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Overnight Consultant"].items()]) + "\n"
+        + "\n### Night Team\n"
+        + "\n".join([f"  {role}: {staff if staff else 'Not assigned'}" for role, staff in staff_info["Night Team"].items()])
+    )
 
-    
-    st.markdown(formatted_data.replace('\n', '<br>'), unsafe_allow_html=True)
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    # Display formatted data in the respective columns
+    with col1:
+        st.markdown(formatted_data_left.replace('\n', '<br>'), unsafe_allow_html=True)
+
+    with col2:
+        st.markdown(formatted_data_right.replace('\n', '<br>'), unsafe_allow_html=True)
 
