@@ -220,16 +220,25 @@ def filter_and_format_data(df, day, date):
 
     return formatted_data
 
-def concatenate_long_day_or_ward_scbu(day_date_row, df):
+  def concatenate_long_day_or_ward_scbu(day_date_row, df):
     ward_eve_idx = df.iloc[1].str.contains("Ward Eve", regex=True)
     scbu_eve_idx = df.iloc[1].str.contains("SCBU Eve", regex=True)
     long_day_pm_idx = df.iloc[1].str.contains("Long Day PM|Long day PM", regex=True)
+    
+    # New checks for "Starlight Ward/HDU" and "2nd ED & Neo Bleep"
+    starlight_idx = df.iloc[1].str.contains("Starlight Ward/HDU", regex=True)
+    neo_bleep_idx = df.iloc[1].str.contains("2nd ED & Neo Bleep", regex=True)
 
     # Check if both "Ward Eve" and "SCBU Eve" exist, concatenate them if they do
     if ward_eve_idx.any() and scbu_eve_idx.any():
         ward_eve = day_date_row.iloc[0, ward_eve_idx.idxmax()]
         scbu_eve = day_date_row.iloc[0, scbu_eve_idx.idxmax()]
         result = f"{ward_eve} and {scbu_eve}"
+    # Check if both "Starlight Ward/HDU" and "2nd ED & Neo Bleep" exist, concatenate them for Long Day
+    elif starlight_idx.any() and neo_bleep_idx.any():
+        starlight = day_date_row.iloc[0, starlight_idx.idxmax()]
+        neo_bleep = day_date_row.iloc[0, neo_bleep_idx.idxmax()]
+        result = f"{starlight} and {neo_bleep}"
     # Otherwise, return "Long Day PM" or "Long day PM" if present
     elif long_day_pm_idx.any():
         result = day_date_row.iloc[0, long_day_pm_idx.idxmax()]
