@@ -51,7 +51,7 @@ def filter_and_format_data(df, day, date):
         return
 
     # Find the first and second occurrences of "Ward" separately
-    ward_occurrences = df.iloc[1].str.contains(r"^Ward\s*$", regex=True)
+    ward_occurrences = df.iloc[1].str.contains(r"^(Ward|Starlight)\s*$", regex=True)
     ward_indexes = ward_occurrences[ward_occurrences].index  # Get all indexes of "Ward"
 
     if len(ward_indexes) >= 2:
