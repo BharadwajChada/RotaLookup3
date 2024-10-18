@@ -247,8 +247,8 @@ def concatenate_long_day_or_ward_scbu(day_date_row, df):
     return result
 
 # Streamlit app
+# Streamlit app
 st.title("Staff Rota Viewer")
-st.markdown("Welcome! Please select the month, day, and date to view the staff rota.")
 
 # Store the URL in a variable without displaying it
 sheet_url = "https://docs.google.com/spreadsheets/d/19VnKEQ7Gle0fjHMPPgc2Eujew2BNRht7zpAWrO__yX4/edit?gid=15103853"
@@ -256,25 +256,19 @@ sheet_url = "https://docs.google.com/spreadsheets/d/19VnKEQ7Gle0fjHMPPgc2Eujew2B
 if sheet_url:
     sheet = connect_to_google_sheet(sheet_url)
     worksheet_names = get_worksheet_names(sheet)
-    
     month = st.selectbox("Select Month", worksheet_names)
-    day = st.selectbox("Select Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-    date = st.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
 
+day = st.selectbox("Select Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+date = st.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
 
 if st.button("Get Rota"):
-    with st.spinner("Loading data..."):
-        sheet = connect_to_google_sheet(sheet_url)
-        df = get_monthly_data(sheet, month)
-        formatted_data = filter_and_format_data(df, day, date.day)  # use date.day for the selected date
-        
-        st.subheader(f"Staff Rota for {day} {date.day} {date.strftime('%B')}")
-        
-        if formatted_data:
-            st.markdown(formatted_data.replace('\n', '<br>'), unsafe_allow_html=True)
-        else:
-            st.warning("No data available for the selected criteria.")
+    sheet = connect_to_google_sheet(sheet_url)
+    df = get_monthly_data(sheet, month)
+    formatted_data = filter_and_format_data(df, day, date)
+    
+    st.subheader(f"Staff Rota for {day} {date}")
+    # Use st.text() or st.markdown() to display the formatted data
 
-# Optional: Reset button
-if st.button("Reset"):
-    st.experimental_rerun()
+    
+    st.markdown(formatted_data.replace('\n', '<br>'), unsafe_allow_html=True)
+
