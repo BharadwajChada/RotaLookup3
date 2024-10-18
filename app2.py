@@ -259,12 +259,8 @@ if sheet_url:
     
     # Month selection with a placeholder
     month = st.selectbox("Select Month", ["Select a month"] + worksheet_names)
-    
-    # Day selection
-    day = st.selectbox("Select Day", ["Select a day", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-    
-    # Date selection with a date input
-    date = st.date_input("Select Date")
+    date = st.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
+
 
 if st.button("Get Rota"):
     with st.spinner("Loading data..."):
