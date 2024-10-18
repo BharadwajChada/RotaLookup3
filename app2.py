@@ -220,7 +220,7 @@ def filter_and_format_data(df, day, date):
 
     return formatted_data
 
-  def concatenate_long_day_or_ward_scbu(day_date_row, df):
+def concatenate_long_day_or_ward_scbu(day_date_row, df):
     ward_eve_idx = df.iloc[1].str.contains("Ward Eve", regex=True)
     scbu_eve_idx = df.iloc[1].str.contains("SCBU Eve", regex=True)
     long_day_pm_idx = df.iloc[1].str.contains("Long Day PM|Long day PM", regex=True)
@@ -259,7 +259,6 @@ if sheet_url:
 
 day = st.selectbox("Select Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
 date = st.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
-
 
 
 if st.button("Get Rota"):
