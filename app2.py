@@ -262,7 +262,7 @@ if sheet_url:
     day = st.sidebar.selectbox("Select Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
     date = st.sidebar.selectbox("Select Date", [f"{i}{'th' if 11 <= i <= 13 else 'st' if i % 10 == 1 else 'nd' if i % 10 == 2 else 'rd' if i % 10 == 3 else 'th'}" for i in range(1, 32)])
 
-if st.button("Get Rota"):
+if st.button("📅 Get Rota"):
     sheet = connect_to_google_sheet(sheet_url)
     df = get_monthly_data(sheet, month)
     formatted_data = filter_and_format_data(df, day, date)
