@@ -227,7 +227,7 @@ def concatenate_long_day_or_ward_scbu(day_date_row, df):
     
     # New checks for "Starlight Ward/HDU" and "2nd ED & Neo Bleep"
     starlight_idx = df.iloc[1].str.contains("Starlight Ward/HDU", regex=True)
-    neo_bleep_idx = df.iloc[1].str.contains("2nd ED & Neo Blp", regex=True)
+    neo_bleep_idx = df.iloc[1].str.contains("2nd ED and Neo bleep", regex=True)
 
     # Check if both "Ward Eve" and "SCBU Eve" exist, concatenate them if they do
     if ward_eve_idx.any() and scbu_eve_idx.any():
