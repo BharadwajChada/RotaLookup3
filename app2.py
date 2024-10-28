@@ -125,7 +125,7 @@ def filter_and_format_data(df, day, date):
             "SHO": day_date_row.iloc[0, df.iloc[1].str.contains("Twilight").idxmax()]
         },
         "Registrar (from 5pm) in ED": {
-            "Registrar": day_date_row.iloc[0, df.iloc[1].str.contains("Comm Evening|PAT Eve", regex=True).idxmax()]
+            "Registrar": day_date_row.iloc[0, df.iloc[1].str.contains("Comm Evening|PAT Eve|Comm/ED/PAT eve", regex=True).idxmax()]
         },
         "Starlight Team": {
             "Consultant": day_date_row.iloc[0, df.iloc[2].str.contains("Ward").idxmax()],
