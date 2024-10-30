@@ -83,16 +83,30 @@ def filter_and_format_data(df, day, date):
         scbu_registrar_index = scbu_indexes[0] if len(scbu_indexes) > 0 else None
         scbu_sho_index = None
 
-    # Find the first and second occurrences of "Clinic" separately
-    clinic_occurrences = df.iloc[1].str.contains(r"^Clinic$", regex=True)
-    clinic_indexes = clinic_occurrences[clinic_occurrences].index  # Get all indexes of "Clinic"
+    # Check for "Clinic" in the first and second rows of each column
+    first_row_clinic = df.iloc[0].str.contains(r"^Clinic$", regex=True)
+    second_row_clinic = df.iloc[1].str.contains(r"^Clinic$", regex=True)
 
+    # Combine indices from both rows to get all "Clinic" occurrences
+    clinic_indexes = list(first_row_clinic[first_row_clinic].index) + list(second_row_clinic[second_row_clinic].index)
+
+    # Assign roles based on the occurrence order of "Clinic"
     if len(clinic_indexes) >= 2:
         clinic_registrar_index = clinic_indexes[0]  # First occurrence for Registrar
-        clinic_sho_index = clinic_indexes[1]  # Second occurrence for SHO
-    else:
-        clinic_registrar_index = clinic_indexes[0] if len(clinic_indexes) > 0 else None
+        clinic_sho_index = clinic_indexes[1]        # Second occurrence for SHO
+    elif len(clinic_indexes) == 1:
+        clinic_registrar_index = clinic_indexes[0]
         clinic_sho_index = None
+    else:
+        clinic_registrar_index = None
+        clinic_sho_index = None
+
+    # Example of how you might assign these roles to a dataframe
+    if clinic_registrar_index is not None:
+        df.iloc[0, clinic_registrar_index] = 'Clinic Registrar'
+    if clinic_sho_index is not None:
+        df.iloc[1, clinic_sho_index] = 'Clinic SHO'
+
 
     # Find the first and second occurrences of "SPA/Emergency cover" separately
     spa_occurrences = df.iloc[1].str.contains(r"^SPA/Emergency cover$", regex=True)
