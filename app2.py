@@ -107,16 +107,32 @@ def filter_and_format_data(df, day, date):
         clinic_sho_index = clinic_indexes_second_row[1] if len(clinic_indexes_second_row) > 1 else None
 
 
-    # Find the first and second occurrences of "SPA/Emergency cover" separately
-    spa_occurrences = df.iloc[1].str.contains(r"^SPA/Emergency cover$", regex=True)
-    spa_indexes = spa_occurrences[spa_occurrences].index  # Get all indexes of "SPA/Emergency Cover"
+   # Define the search pattern to account for both "SPA/Emergency cover" and "SPA/Emergency"
+    pattern = r"^SPA/Emergency( cover)?$"
 
-    if len(spa_indexes) >= 2:
-        spa_registrar_index = spa_indexes[0]  # First occurrence for Registrar
-        spa_sho_index = spa_indexes[1]  # Second occurrence for SHO
-    else:
-        spa_registrar_index = spa_indexes[0] if len(spa_indexes) > 0 else None
-        spa_sho_index = None
+    # Check for occurrences in both the first and second rows
+    spa_occurrences_first_row = df.iloc[0].str.contains(pattern, regex=True)
+    spa_occurrences_second_row = df.iloc[1].str.contains(pattern, regex=True)
+
+    # Get all indexes of "SPA/Emergency" in both rows
+    spa_indexes_first_row = spa_occurrences_first_row[spa_occurrences_first_row].index.tolist()
+    spa_indexes_second_row = spa_occurrences_second_row[spa_occurrences_second_row].index.tolist()
+
+    # Initialize indexes for Registrar and SHO
+    spa_registrar_index = None
+    spa_sho_index = None
+
+    # Determine the appropriate indexes based on where "SPA/Emergency" appears
+    if spa_indexes_first_row:
+        # If "SPA/Emergency" appears in the first row, assign the first occurrence to Registrar
+        spa_registrar_index = spa_indexes_first_row[0]
+        # Check if there is a "SPA/Emergency" occurrence in the second row for SHO
+        spa_sho_index = spa_indexes_second_row[0] if spa_indexes_second_row else None
+    elif spa_indexes_second_row:
+        # If "SPA/Emergency" only appears in the second row, assign the first and second occurrences there
+        spa_registrar_index = spa_indexes_second_row[0]
+        spa_sho_index = spa_indexes_second_row[1] if len(spa_indexes_second_row) > 1 else None
+
 
 
     # Extract staff information for all teams
