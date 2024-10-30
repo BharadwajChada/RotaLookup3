@@ -83,16 +83,28 @@ def filter_and_format_data(df, day, date):
         scbu_registrar_index = scbu_indexes[0] if len(scbu_indexes) > 0 else None
         scbu_sho_index = None
 
-    # Find the first and second occurrences of "Clinic" separately
-    clinic_occurrences = df.iloc[1].str.contains(r"^Clinic$", regex=True)
-    clinic_indexes = clinic_occurrences[clinic_occurrences].index  # Get all indexes of "Clinic"
+    # Check for occurrences of "Clinic" in the first and second rows separately
+    clinic_occurrences_first_row = df.iloc[0].str.contains(r"^Clinic$", regex=True)
+    clinic_occurrences_second_row = df.iloc[1].str.contains(r"^Clinic$", regex=True)
 
-    if len(clinic_indexes) >= 2:
-        clinic_registrar_index = clinic_indexes[0]  # First occurrence for Registrar
-        clinic_sho_index = clinic_indexes[1]  # Second occurrence for SHO
-    else:
-        clinic_registrar_index = clinic_indexes[0] if len(clinic_indexes) > 0 else None
-        clinic_sho_index = None
+    # Get all indexes of "Clinic" in both rows
+    clinic_indexes_first_row = clinic_occurrences_first_row[clinic_occurrences_first_row].index.tolist()
+    clinic_indexes_second_row = clinic_occurrences_second_row[clinic_occurrences_second_row].index.tolist()
+
+    # Initialize indexes for Registrar and SHO
+    clinic_registrar_index = None
+    clinic_sho_index = None
+
+    # Determine the appropriate indexes based on where "Clinic" appears
+    if clinic_indexes_first_row:
+        # If "Clinic" appears in the first row, assign the first occurrence to Registrar
+        clinic_registrar_index = clinic_indexes_first_row[0]
+        # Check if there is a "Clinic" occurrence in the second row for SHO
+        clinic_sho_index = clinic_indexes_second_row[0] if clinic_indexes_second_row else None
+    elif clinic_indexes_second_row:
+        # If "Clinic" only appears in the second row, assign the first and second occurrences there
+        clinic_registrar_index = clinic_indexes_second_row[0]
+        clinic_sho_index = clinic_indexes_second_row[1] if len(clinic_indexes_second_row) > 1 else None
 
 
     # Find the first and second occurrences of "SPA/Emergency cover" separately
